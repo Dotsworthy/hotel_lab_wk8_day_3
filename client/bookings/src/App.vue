@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <booking-form/>
     <booking-grid :bookings="bookings"/>
   </div>
 </template>
@@ -7,6 +8,8 @@
 <script>
 import BookingsService from '@/services/BookingsService.js';
 import BookingsGrid from '@/components/BookingsGrid';
+import BookingForm from '@/components/BookingForm';
+import {eventBus} from '@/main.js'
 
 export default {
   data(){
@@ -18,9 +21,19 @@ export default {
   mounted() {
     BookingsService.getBookings()
     .then(bookings => this.bookings = bookings);
+
+    eventBus.$on('booking-added', (booking) => {
+      this.bookings.push(booking)
+    })
+
+    eventBus.$on('booking-deleted', (id) => {
+      let index = this.bookings.findIndex(booking => booking._id === id);
+      this.bookings.splice(index, 1);
+    })
   },
   components: {
-    'booking-grid': BookingsGrid
+    'booking-grid': BookingsGrid,
+    'booking-form': BookingForm
   }
 }
 
