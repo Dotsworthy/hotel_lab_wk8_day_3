@@ -8,7 +8,7 @@
       <input type="text" id="email" v-model="email" required>
 
       <label for="status">Checked In Status</label>
-      <select id="status" v-model="checkedInStatus">
+      <select required id="status" v-model="checkedInStatus">
         <option value="" selected disabled hidden>Please select!</option>
         <option  value="Checked-In">Checked-In</option>
         <option value="Checked-Out">Checked-Out</option>
@@ -37,16 +37,21 @@ export default {
   methods: {
     addBooking(event){
       event.preventDefault()
-      const booking = {
-        name: this.name,
-        email: this.email,
-        checkedInStatus: this.checkedInStatus
+      let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      if(this.email.match(mailformat)) {
+        const booking = {
+          name: this.name,
+          email: this.email,
+          checkedInStatus: this.checkedInStatus
+        }
+        BookingsService.postBooking(booking)
+        .then(res => eventBus.$emit('booking-added', res))
+        this.name = this.email = this.checkedInStatus = ''
       }
-      BookingsService.postBooking(booking)
-      .then(res => eventBus.$emit('booking-added', res))
-      this.name = this.email = this.checkedInStatus = ''
+      else {
+        alert("You have entered an invalid email address!");
+      }
     }
-
   }
 }
 </script>
