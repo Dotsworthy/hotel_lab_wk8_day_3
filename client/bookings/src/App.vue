@@ -4,17 +4,23 @@
 </template>
 
 <script>
+import BookingsService from '@/services/BookingsService.js'
 
 export default {
   data(){
     return{
       bookings: []
     };
-  }
+  },
   name: 'App',
+  mounted() {
+    BookingsService.getBookings()
+    .then(bookings => this.bookings = bookings);
+  },
   components: {
   }
 }
+
 </script>
 
 <style>
