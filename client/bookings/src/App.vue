@@ -1,10 +1,12 @@
 <template>
   <div id="app">
+    <booking-grid :bookings="bookings"/>
   </div>
 </template>
 
 <script>
-import BookingsService from '@/services/BookingsService.js'
+import BookingsService from '@/services/BookingsService.js';
+import BookingsGrid from '@/components/BookingsGrid';
 
 export default {
   data(){
@@ -18,6 +20,7 @@ export default {
     .then(bookings => this.bookings = bookings);
   },
   components: {
+    'booking-grid': BookingsGrid
   }
 }
 
